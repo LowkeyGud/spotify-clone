@@ -19,7 +19,7 @@ function secondsToMinutesSeconds(seconds) {
 
 async function getSongs(folder) {
   currFolder = folder;
-  let a = await fetch(`/${folder}/`);
+  let a = await fetch(`${folder}/`);
   let response = await a.text();
   let div = document.createElement("div");
   div.innerHTML = response;
@@ -28,7 +28,7 @@ async function getSongs(folder) {
   for (let index = 0; index < as.length; index++) {
     const element = as[index];
     if (element.href.endsWith(".mp3")) {
-      songs.push(element.href.split(`/${folder}/`)[1]);
+      songs.push(element.href.split(`${folder}/`)[1]);
     }
   }
 
@@ -64,7 +64,7 @@ async function getSongs(folder) {
 }
 
 const playMusic = (track, pause = false) => {
-  currentSong.src = `/${currFolder}/` + track;
+  currentSong.src = `${currFolder}/` + track;
   if (!pause) {
     currentSong.play();
     play.src = "img/pause.svg";
@@ -75,7 +75,7 @@ const playMusic = (track, pause = false) => {
 
 async function displayAlbums() {
   console.log("displaying albums");
-  let a = await fetch(`/songs/`);
+  let a = await fetch(`songs/`);
   let response = await a.text();
   let div = document.createElement("div");
   div.innerHTML = response;
@@ -85,15 +85,14 @@ async function displayAlbums() {
   for (let index = 0; index < array.length; index++) {
     const e = array[index];
     // Only process folders inside /songs/
-    if (e.pathname.startsWith("/songs/") && !e.pathname.endsWith(".htaccess")) {
+    if (e.pathname.includes("songs/") && !e.pathname.endsWith(".htaccess")) {
       // Extract folder name from pathname
       let parts = e.pathname.split("/");
-      // Find the folder name (the part after /songs/)
       let folderIndex = parts.findIndex((p) => p === "songs") + 1;
       let folder = parts[folderIndex];
       if (!folder) continue; // skip if folder not found
       try {
-        let a = await fetch(`/songs/${folder}/info.json`);
+        let a = await fetch(`songs/${folder}/info.json`);
         if (!a.ok) continue; // skip if info.json not found
         let response = await a.json();
         cardContainer.innerHTML =
@@ -107,7 +106,7 @@ async function displayAlbums() {
                         </svg>
                     </div>
 
-                    <img src="/songs/${folder}/cover.jpg" alt="">
+                    <img src="songs/${folder}/cover.jpg" alt="">
                     <h2>${response.title}</h2>
                     <p>${response.description}</p>
                 </div>`;
