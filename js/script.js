@@ -49,6 +49,7 @@ async function getSongs(folder) {
     document.querySelector(".songList").getElementsByTagName("li")
   ).forEach((e) => {
     e.addEventListener("click", (element) => {
+      // Pass the song name directly
       playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim());
     });
   });
@@ -57,7 +58,9 @@ async function getSongs(folder) {
 }
 
 const playMusic = (track, pause = false) => {
-  currentSong.src = `${currFolder}/` + track;
+  // Ensure currFolder is just the folder name (not a path)
+  let folderName = currFolder.replace("songs/", "");
+  currentSong.src = `songs/${folderName}/` + track;
   if (!pause) {
     currentSong.play();
     play.src = "img/pause.svg";
